@@ -23,7 +23,7 @@ Disclaimer: developed by repository owner
       - [Scenarios](#scenarios-1)
     - [Kernel](#kernel)
     - [SSH](#ssh)
-    - [Globbing & Wildcards](#globbing--wildcards)
+    - [Globbing \& Wildcards](#globbing--wildcards)
     - [Boot Process](#boot-process)
     - [Disk and Filesystem](#disk-and-filesystem)
     - [Performance Analysis](#performance-analysis)
@@ -40,7 +40,7 @@ Disclaimer: developed by repository owner
     - [Virtualization](#virtualization)
     - [AWK](#awk)
     - [System Calls](#system-calls)
-    - [Filesystem & Files](#filesystem--files)
+    - [Filesystem \& Files](#filesystem--files)
     - [Advanced Networking](#advanced-networking)
     - [Memory](#memory)
     - [Distributions](#distributions)
@@ -850,10 +850,10 @@ Learn more : [How can I tell how many bits my ssh key is? - Superuser](https://s
 <details>
 <summary>Which line numbers will be printed when running `grep '\baaa\b'` on the following content:
 
-aaa
-bbb
-ccc.aaa
-aaaaaa</summary><br><b>
+aaa  
+bbb  
+ccc.aaa  
+aaaaaa  </summary><br><b>
 
 lines 1 and 3.
 </b></details>
@@ -889,10 +889,14 @@ Another way to ask this: what happens from the moment you turned on the server u
 
 <details>
 <summary>What is GRUB2?</summary><br><b>
-</b></details>
+GRUB2 is the default bootloader in most modern Linux systems. It’s responsible for loading the kernel and providing a flexible interface for multi-boot or kernel parameter tuning. I’ve used GRUB2 to troubleshoot boot issues, roll back kernels, and configure boot-time options during system recovery
+</b>
+
+</details>
 
 <details>
 <summary>What is Secure Boot?</summary><br><b>
+Secure Boot is a UEFI feature that ensures only trusted, signed bootloaders and kernels are executed during system startup. It’s a key defense against boot-time malware. In Linux environments, it requires signed GRUB and kernel binaries.
 </b></details>
 
 <details>
@@ -959,6 +963,7 @@ True.
 
 <details>
 <summary>What happens when you delete the original file in case of soft link and hard link?</summary><br><b>
+When you delete the original file, a soft link becomes broken because it points to the file path, which no longer exists. In contrast, a hard link still works because it references the same inode as the original file. The data stays on disk until all hard links to that inode are removed
 </b></details>
 
 <details>
@@ -969,6 +974,7 @@ There are many answers for this question. One way is running `df -T`
 
 <details>
 <summary>What is a swap partition? What is it used for?</summary><br><b>
+A swap partition is a reserved space on disk that acts as an extension of physical RAM. It’s used when the system runs out of memory, allowing less-used memory pages to be offloaded temporarily. While it helps with stability and hibernation, relying too much on swap can slow down performance, so it’s important to monitor usage and size it appropriately based on the workload.
 </b></details>
 
 <details>
@@ -985,6 +991,7 @@ There are many answers for this question. One way is running `df -T`
 
 <details>
 <summary>You are trying to create a new file but you get "File system is full". You check with df for free space and you see you used only 20% of the space. What could be the problem?</summary><br><b>
+If I get a ‘filesystem is full’ error but df shows plenty of free space, I’d suspect inode exhaustion. Each file consumes an inode, and if a directory contains millions of tiny files, the inode pool can be depleted even if there’s still disk space. I’d check with df -i, and if inode usage is 100%, I’d clean up unnecessary files or restructure the data storage.
 </b></details>
 
 <details>
@@ -995,6 +1002,7 @@ There are many answers for this question. One way is running `df -T`
 
 <details>
 <summary>What is LVM?</summary><br><b>
+LVM is a logical volume management system that provides more flexibility than traditional partitioning. It allows you to resize volumes on the fly, take snapshots, and manage storage as a pool rather than fixed partitions. I’ve used LVM to expand volumes when disk usage spikes, to simplify backup with snapshots, and to streamline storage provisioning across multiple disks.
 </b></details>
 
 <details>
@@ -1003,28 +1011,84 @@ There are many answers for this question. One way is running `df -T`
   * PV
   * VG
   * LV</summary><br><b>
+🔹 PV (Physical Volume)
+A Physical Volume is the underlying physical storage used by LVM.
 
+It can be a whole disk (e.g. /dev/sdb) or a partition (e.g. /dev/sdb1) that has been initialized for LVM use with pvcreate.
+
+Multiple PVs can be combined to form a larger storage pool.
+
+🧠 Think of PVs as raw building blocks (bricks).
+
+🔹 VG (Volume Group)
+A Volume Group is a storage pool created by combining one or more PVs.
+
+It acts like a big “container” from which logical volumes can be carved.
+
+You create a VG using vgcreate, and can later expand it by adding more PVs with vgextend.
+
+🧠 Think of a VG as the house built from those bricks.
+
+🔹 LV (Logical Volume)
+A Logical Volume is a virtual partition created from the Volume Group.
+
+This is what you format with a filesystem and mount — it works just like a regular disk partition.
+
+You can resize it, take snapshots, and manage it dynamically using lvcreate, lvextend, etc.
+
+🧠 Think of an LV as a room in the house — flexible and reconfigurable.
+
+🧩 How they relate:
+```text
+Disk → PV → VG → LV → Filesystem → Mount
+```
+Example:
+
+`/dev/sdb` → PV
+
+PV → added to `my_vg` (VG)
+
+my_vg → used to create `my_lv` (LV)
+
+my_lv → formatted and mounted as `/mnt/data`
 
 </b></details>
 
 <details>
 <summary>What is NFS? What is it used for?</summary><br><b>
+NFS is a network-based file sharing protocol that allows clients to mount remote directories and use them as if they were local. I’ve used NFS in Linux environments for centralizing user home directories, sharing config files across systems, and setting up shared storage in containerized or clustered environments.
 </b></details>
 
 <details>
 <summary>What RAID is used for? Can you explain the differences between RAID 0, 1, 5 and 10?</summary><br><b>
+RAID is used to improve storage performance and reliability by combining multiple disks. I’m familiar with different RAID levels like RAID 0 for speed, RAID 1 for redundancy, RAID 5 for a balanced setup, and RAID 10 for high-performance fault-tolerant environments. I usually recommend RAID 10 for databases and RAID 5 for general storage when budget is a concern.
 </b></details>
 
 <details>
 <summary>Describe the process of extending a filesystem disk space</summary><br><b>
+The process starts by verifying the current disk and filesystem usage to understand the existing setup. Then, if the disk is virtual or physical, you would add or allocate additional space accordingly.
+
+Next, the operating system needs to detect the new disk size—sometimes this requires a rescan or a reboot. After that, I adjust the partition table using tools like fdisk or parted to extend the partition into the new space.
+
+If the system uses LVM, I would then resize the physical volume with pvresize, followed by extending the logical volume using lvextend. Finally, I resize the filesystem itself with commands like resize2fs for ext4 or xfs_growfs for xfs filesystems, so the OS can utilize the added space.
 </b></details>
 
 <details>
 <summary>What is lazy umount?</summary><br><b>
+Lazy unmount is a technique used to detach a filesystem from the system immediately but delay the actual cleanup until the filesystem is no longer busy. When you run a lazy unmount, the system marks the filesystem as unmounted from the user’s perspective, so new access attempts fail right away. However, the actual release of resources happens later, once all processes stop using the filesystem.
+
+This is useful when a regular unmount would fail because some processes still have files open or are using the mount point. The lazy unmount helps avoid forcing those processes to close abruptly or waiting indefinitely, improving system stability.
+
+In Linux, the lazy unmount is done with the command umount -l
 </b></details>
 
 <details>
 <summary>What is tmpfs?</summary><br><b>
+Tmpfs is a temporary filesystem that stores files in volatile memory, meaning RAM or swap space, instead of on a physical disk. Because it uses memory, it offers very fast read and write speeds compared to disk-based filesystems.
+
+The key feature of tmpfs is that its contents do not persist across reboots — everything stored in tmpfs is lost when the system shuts down or restarts. It’s commonly used for temporary data, such as /tmp or runtime files, where high-speed access is needed and persistence is not important.
+
+Tmpfs is dynamically sized, so it uses only as much memory as the stored data requires, up to a configured limit, which makes it efficient in managing system resources.
 </b></details>
 
 <details>
@@ -1032,6 +1096,11 @@ There are many answers for this question. One way is running `df -T`
 
   * /var/log/messages
   * /var/log/boot.log</summary><br><b>
+  /var/log/messages is a general system log file that records a wide range of important events, including system messages, kernel events, hardware errors, service start or stop notifications, and other informational or warning messages generated by the OS and various applications. It’s commonly used for troubleshooting general system issues.
+
+On the other hand, /var/log/boot.log specifically captures messages related to the system startup process. It logs the output from services and scripts that run during boot, showing which services started successfully and highlighting any errors encountered while the system was booting.
+
+Together, these logs provide both a broad view of system activity and detailed insight into the boot process.
 </b></details>
 
 <details>
