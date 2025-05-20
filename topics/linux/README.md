@@ -1404,6 +1404,15 @@ Most modern systems run an NTP service or client daemon like `ntpd` or `chronyd`
 
 <details>
 <summary>Explain Kernel OOM</summary><br><b>
+
+Kernel OOM, or **Out of Memory**, is a condition that occurs when the Linux kernel detects that the system is critically low on memory and can't allocate more to processes. When this happens, the kernel invokes the **OOM Killer**, a mechanism designed to recover memory by forcefully terminating one or more processes.
+
+The OOM Killer selects processes to kill based on several factors, such as memory usage, priority (nice value), and how critical the process is to the system. Its goal is to free up as much memory as possible with minimal impact, so it often targets large, non-essential processes.
+
+This typically happens when swap is exhausted or severely overcommitted, and no memory can be reclaimed through normal means like cache cleanup or paging.
+
+It's usually a sign of a memory leak, poor application memory handling, or misconfigured limits, so regular monitoring and proper resource limits (e.g. `ulimit`, cgroups) are key to preventing it.
+
 </b></details>
 
 <a name="questions-linux-security"></a>
