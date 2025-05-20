@@ -1271,6 +1271,50 @@ You can also try closing/terminating the parent process. This will make the zomb
   * Zombie Processes
 </summary><br><b>
 
+Here’s a polished interview-style answer for that question:
+
+---
+
+**Interviewer:** *How do you find processes executed or owned by a certain user, Java processes, and zombie processes on a Linux system?*
+
+**You:**
+To find all processes owned by a specific user, I use the `ps` command with a user filter. For example:
+
+```
+ps -u username
+```
+
+This lists all processes owned by `username`.
+
+To find all Java processes, I typically use `ps` combined with `grep` to filter by the process name:
+
+```
+ps aux | grep java
+```
+
+Alternatively, `pgrep java` can directly list the PIDs of Java processes.
+
+For identifying zombie processes, which are processes that have completed execution but still have an entry in the process table, I look for processes with a status of `Z`. This can be done with:
+
+```
+ps aux | grep 'Z'
+```
+
+or more precisely:
+
+```
+ps -eo pid,ppid,state,cmd | grep ' Z '
+```
+
+where `Z` stands for zombie in the process state column.
+
+Monitoring and managing zombies is important because they can accumulate and consume system resources if not reaped properly.
+
+---
+
+If you'd like, I can also show how to automate cleanup or monitor these processes over time.
+
+
 If you mention at any point ps command with arguments, be familiar with what these arguments does exactly.
 </b></details>
 
