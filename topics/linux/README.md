@@ -1269,7 +1269,7 @@ You can also try closing/terminating the parent process. This will make the zomb
   * Processes executed/owned by a certain user
   * Process which are Java processes
   * Zombie Processes
-</summary><br><b>
+</summary><br><b> 
 
 Here’s a polished interview-style answer for that question:
 
@@ -1325,6 +1325,15 @@ It is the first process executed by the kernel during the booting of a system. I
 
 <details>
 <summary>Can you describe how processes are being created?</summary><br><b>
+In most operating systems, processes are created through a mechanism called forking. When a process wants to create a new process, it typically calls the fork() system call, which creates a nearly identical copy of the parent process, including its memory and execution context.
+
+After the fork, the new process—called the child process—can execute independently. Usually, the child then calls exec() to replace its memory space with a new program, effectively running a different executable.
+
+This two-step process—fork() followed by exec()—is the standard way new processes start in Unix-like systems.
+
+In addition, the system assigns a unique Process ID (PID) to the child and sets up necessary resources like file descriptors, memory space, and scheduling information.
+
+This process creation model supports multitasking by allowing many processes to run concurrently, each with its own isolated execution environment.
 </b></details>
 
 <details>
