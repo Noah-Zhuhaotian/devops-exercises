@@ -1392,6 +1392,14 @@ This is a great article on the topic: https://www.computerhope.com/jargon/f/file
 
 <details>
 <summary>What is NTP? What is it used for?</summary><br><b>
+
+NTP stands for **Network Time Protocol**. It's a protocol used to synchronize the clocks of computer systems over a network to a reference time source, typically an internet-based time server or a GPS-based clock.
+
+Accurate timekeeping is critical in distributed systems—for example, for logging events in the correct order, enforcing security protocols like Kerberos, coordinating scheduled tasks, and maintaining database consistency. NTP ensures all systems in a network have the same time, typically within milliseconds of each other.
+
+Most modern systems run an NTP service or client daemon like `ntpd` or `chronyd` to periodically adjust the system clock.
+
+
 </b></details>
 
 <details>
