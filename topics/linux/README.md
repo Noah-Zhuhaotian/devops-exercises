@@ -1420,22 +1420,93 @@ It's usually a sign of a memory leak, poor application memory handling, or misco
 
 <details>
 <summary>What is chroot? In what scenarios would you consider using it?</summary><br><b>
+
+`chroot` stands for **change root**, and it’s a Unix system operation that changes the apparent root directory for a running process and its children. Essentially, it creates a confined environment—often referred to as a **chroot jail**—where the process can’t access files or directories outside the specified directory tree.
+
+This is useful in several scenarios:
+
+1. **Testing or debugging** – I can simulate a different root environment without affecting the host system, which is helpful for testing packages or scripts.
+2. **System recovery** – For example, if a system won’t boot, I can boot from a live CD, mount the root filesystem, `chroot` into it, and run repairs as if I were in the original environment.
+3. **Security isolation** – While not a complete security solution, `chroot` can be used to limit what certain services (like FTP or DNS) can access, reducing risk in case of a compromise.
+
+That said, it's important to note that `chroot` is not as secure or isolated as containers or virtual machines—it can be escaped under certain conditions, especially by privileged users. For stronger isolation, I’d prefer using containers like Docker or systemd-nspawn.
+
 </b></details>
 
 <details>
 <summary>What is SELiunx?</summary><br><b>
+
+SELinux stands for **Security-Enhanced Linux**. It’s a security module integrated into the Linux kernel that provides **mandatory access control (MAC)**, going beyond the traditional discretionary access control (DAC) provided by Unix file permissions.
+
+With SELinux, every process and object (like files, ports, or sockets) has a security context. The system enforces strict rules about what interactions are allowed between them, based on a defined security policy. This helps contain compromised services and restricts what even root processes can do.
+
+For example, if a web server is compromised, SELinux can prevent it from accessing files it shouldn’t—even if the file permissions would normally allow it.
+
+It operates in three modes:
+
+* **Enforcing**: SELinux policies are enforced.
+* **Permissive**: Policies are logged but not enforced (useful for debugging).
+* **Disabled**: SELinux is turned off.
+
+While it can add complexity to system administration, it’s a powerful tool for hardening systems, especially in production environments.
+
+
 </b></details>
 
 <details>
 <summary>What is Kerberos?</summary><br><b>
+Kerberos is a network authentication protocol designed to provide secure identity verification over untrusted networks, like the internet or internal enterprise environments. It uses symmetric key cryptography and relies on a trusted third party, known as the Key Distribution Center (KDC), to authenticate users and services.
+
+The core idea is to avoid sending passwords over the network. Instead, a client proves its identity once to the KDC, which then issues tickets that can be used to access other services securely.
+
+It works in three main steps:
+
+The user authenticates to the Authentication Server (AS) to get a Ticket Granting Ticket (TGT).
+
+The TGT is presented to the Ticket Granting Server (TGS) to get service-specific tickets.
+
+The client uses the service ticket to authenticate to the target service.
+
+Kerberos is widely used in enterprise environments, especially in Active Directory domains and single sign-on (SSO) implementations.
+
+It’s known for being secure and efficient, but it requires time synchronization (usually via NTP), and both clients and services need to be properly configured with shared secrets or keytabs.
 </b></details>
 
 <details>
 <summary>What is nftables?</summary><br><b>
+
+`nftables` is the modern **packet filtering framework** in Linux, introduced as a replacement for older tools like `iptables`, `ip6tables`, `arptables`, and `ebtables`. It was designed to unify and simplify Linux firewall configuration and rule management.
+
+Unlike `iptables`, which had separate tools and rule sets for IPv4, IPv6, ARP, and Ethernet filtering, `nftables` provides a **single consistent interface** for managing all types of packet filtering through the `nft` command.
+
+Some of its key benefits include:
+
+* **Simpler syntax**: The rules are easier to read and maintain.
+* **Performance improvements**: It uses a virtual machine in the kernel to evaluate rules efficiently.
+* **Atomic rule changes**: It allows batch updates to avoid inconsistent states.
+* **Advanced features**: Like maps, sets, and verdict chains, which make rule writing more flexible and powerful.
+
+It’s now the default firewall backend in many modern Linux distributions like Debian, Fedora, and RHEL.
+
+In short, `nftables` is the future of Linux packet filtering—more powerful, maintainable, and efficient than its predecessors.
+
 </b></details>
 
 <details>
 <summary>What firewalld daemon is responsible for?</summary><br><b>
+
+`firewalld` is a **dynamic firewall management daemon** used on many modern Linux systems, like RHEL, CentOS, and Fedora. It provides a **high-level interface** to configure firewall rules using **zones and services**, and it acts as an abstraction layer over backends like `nftables` or `iptables`.
+
+The key responsibilities of the `firewalld` daemon are:
+
+* **Managing firewall rules dynamically** without needing to restart the entire firewall stack.
+* Organizing rules using **zones**, which define trust levels for different network interfaces.
+* Enabling or disabling **services and ports** easily via predefined configurations.
+* Allowing **runtime vs. permanent configuration**, so changes can be tested before being made persistent.
+* Providing **D-Bus** and **CLI interfaces (`firewall-cmd`)** for scripting and automation.
+
+It’s particularly useful in environments where you want centralized, policy-based firewall management that can adapt without disrupting existing network connections.
+
 </b></details>
 
 <details>
